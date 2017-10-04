@@ -1,2 +1,2 @@
 # Network-security-system-integrity-verifier
-fro linux system, Implemented the system Integrity verifier , the system integrity verifier is to detect the file system modifications occuring with in directory tree. The SIV outputs statistics and warnings about changes to a report file specified by the user. The system integrity verifier (SIV) can be run either in initalization mode or in verification mode
+for linux system, Implementing the system Integrity verifier(SIV) , the system integrity verifier is to detect the file system modifications occuring with in a directory tree. The SIV outputs statistics and warnings about changes to a report file specified by the user. The system integrity verifier  can be run either in initalization mode or in verification mode
