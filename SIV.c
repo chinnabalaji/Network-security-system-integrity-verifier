@@ -20,3 +20,9 @@ void print(int argc, char **ptr);
 bool checkdir(char* name);
 bool checkfile(char* name);
 bool checkoutside(char *dir, char *file);
+
+int main(int argc, char *argv[]){
+	//char **ptr = argv;
+	//for(int i = 0; i < argc; i++){
+		//printf("%s at %p\n", *(ptr + i), (ptr + i));
+	//}
