@@ -27,3 +27,15 @@ def directory_exists(directory):  #checks if directory exists or not?
       return True
     else:
       return False
+def inputfile_directory(user_file): #checks if the directory of report or verification file exists or not?
+    file_split=user_file.split('/')
+    length=len(file_split)
+    last=length-1
+    filedir=""
+    for i in range(1,last):
+        filedir=filedir+"/"+file_split[i]
+    filedir=filedir+"/"
+    if(os.path.isdir(filedir)):
+      return True
+    else:
+      return False
