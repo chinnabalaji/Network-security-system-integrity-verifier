@@ -81,15 +81,15 @@ def getFolderSize(folder):                    #returns directory size
        
     return total_size
   
-  def modifiedtime(path): #returns last modified time for files or directories
+  def modifiedtime(path):                      #returns last modified time for files or directories
     mtime=time.ctime(os.path.getmtime(path))
     return mtime
 
-def permissions(path): #returns octet permissions for files or directories
+def permissions(path):                         #returns octet permissions for files or directories
     file_permissions=(os.stat(path).st_mode) 
     return file_permissions
 
-def hashoutput(fname,hash_value): # returns hash values of files only, hash doesn't exists for directories 
+def hashoutput(fname,hash_value):              # returns hash values of files only, hash doesn't exists for directories 
     if(hash_value=="sha1"):
       hash_sha1 = hashlib.sha1()
       with open(fname, "rb") as f:
@@ -105,7 +105,7 @@ def hashoutput(fname,hash_value): # returns hash values of files only, hash does
     else:
        pass
 
-def history_mon_dir(mon_dir): #checks if initialization mode is done for a directory or not?
+def history_mon_dir(mon_dir):                  #checks if initialization mode is done for a directory or not?
    h=open("history.txt","r")
    num=[]
    for line in h:
@@ -119,7 +119,7 @@ def history_mon_dir(mon_dir): #checks if initialization mode is done for a direc
    else:
      return False ##### nothing exists in num because it is equal to zero
  
-def max_mon_dir(mon_dir): #returns the latest details of initialization mode for a monitored directory!
+def max_mon_dir(mon_dir):                  #returns the latest details of initialization mode for a monitored directory!
    h=open("history.txt","r")
    num=[]
    for line in h:
@@ -130,7 +130,7 @@ def max_mon_dir(mon_dir): #returns the latest details of initialization mode for
    h.close()
    return max(num)
      
-def check_vfiles(verify_vfile,init_vfile):#checks if v_file entered in i_mode is same as that entered in v_mode for a monitored_d?
+def check_vfiles(verify_vfile,init_vfile):   #checks if v_file entered in i_mode is same as that entered in v_mode for a monitored_d?
    if(verify_vfile==init_vfile):
      return True
    else:
