@@ -39,3 +39,44 @@ def inputfile_directory(user_file): #checks if the directory of report or verifi
       return True
     else:
       return False
+    
+    ef fileout_mondir(user_file,mon_dir): #checks if report or verification file is outside monitored directory or not?
+    if mon_dir in user_file:
+      return False
+    else:
+      return True
+
+def file_exists(filename):    #checks if report or verification file already exists or not?
+    if(os.path.isfile(filename)):
+      return True
+    else:
+      return False
+
+def userowner(path):   #returns owner of the file or directory
+  stat_info = os.stat(path)
+  uid = stat_info.st_uid
+  user = pwd.getpwuid(uid)[0]
+  return user
+
+def groupowner(path): #returns group owner of the file or directory
+  stat_info = os.stat(path)
+  gid = stat_info.st_gid
+  group = grp.getgrgid(gid)[0]
+  return group
+
+def getFileSize(name): #returns file size
+   path_size=os.path.getsize(name)
+   return path_size
+
+def getFolderSize(folder): #returns directory size
+    total_size = os.path.getsize(folder)
+    for item in os.listdir(folder):
+        itempath = os.path.join(folder, item)
+        if(os.path.isfile(itempath)):
+            total_size += os.path.getsize(itempath)
+        elif(os.path.isdir(itempath)):
+            total_size += getFolderSize(itempath)
+        else:
+          pass
+       
+    return total_size
