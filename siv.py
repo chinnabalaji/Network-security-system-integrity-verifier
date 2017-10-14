@@ -40,19 +40,19 @@ def inputfile_directory(user_file): #checks if the directory of report or verifi
     else:
       return False
     
-    ef fileout_mondir(user_file,mon_dir): #checks if report or verification file is outside monitored directory or not?
+    def fileout_mondir(user_file,mon_dir):#checks if report or verification file is outside monitored directory or not?
     if mon_dir in user_file:
       return False
     else:
       return True
 
-def file_exists(filename):    #checks if report or verification file already exists or not?
+def file_exists(filename):      #checks if report or verification file already exists or not?
     if(os.path.isfile(filename)):
       return True
     else:
       return False
 
-def userowner(path):   #returns owner of the file or directory
+def userowner(path):        #returns owner of the file or directory
   stat_info = os.stat(path)
   uid = stat_info.st_uid
   user = pwd.getpwuid(uid)[0]
