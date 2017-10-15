@@ -135,3 +135,120 @@ def check_vfiles(verify_vfile,init_vfile):   #checks if v_file entered in i_mode
      return True
    else:
      return False
+
+  
+  sleep(1)
+length_arguments=len(sys.argv)
+
+if(sys.argv[1]=='-h' or sys.argv[1]=='--h'):
+  print "\tEnter the input as follows ..."
+  sleep(1)
+  print "\tpython siv.py <-i|-v|-h> –D <monitored_directory> -V <verification_file> -R <report_file> -H <hash_function>"
+  sleep(1)
+  print "\tHash functions supported are md5 and sha1 ..."
+  sys.exit()
+
+elif(sys.argv[1]=='-i'):
+    if(length_arguments==10):
+      if(sys.argv[1]=='-i' and sys.argv[2]=='-D' and sys.argv[4]=='-V' and sys.argv[6]=='-R' and sys.argv[8]=='-H'):
+        print "\tInitialization mode running ..."
+        sleep(1)
+        
+        mon_dir=sys.argv[3]
+        while not(directory_exists(mon_dir)): #loops untill user enters a valid directory
+             mon_dir=raw_input("\tPlease enter a valid directory:")
+        else:
+          print "\tMonitored directory exists!"
+          sleep(1)
+        
+        init_vfile=sys.argv[5]
+        init_rfile=sys.argv[7]
+        hash_value=sys.argv[9]
+ 
+        init_rfile=init_rfile+".txt"  ## report file will be converted to text format here
+
+        
+        dir_count=0
+        file_count=0
+        
+        w=open("history.txt","a")
+        w.write('%s.%s:%s,%s,%s'%(lastid,mon_dir,hash_value,init_rfile,init_vfile)+"\n")
+        w.close()
+        
+        ########################################### checks the directory of verification file
+        
+        while not(inputfile_directory(init_vfile)):
+            init_vfile=raw_input("\tVerification file's directory is not valid, please enter the file path again:")
+        else:
+           pass
+        
+        ############################################## checks if ther verification file is outside monitored directory?
+        
+        while not(fileout_mondir(init_vfile,mon_dir)):
+            init_vfile=raw_input("\tPlease enter verification file outside monitored directory:")
+        else:
+          print "\tVerification file is outside monitored directory ..."
+          sleep(1)
+        
+        ########################################### checks the directory of report file?
+        
+        while not(inputfile_directory(init_rfile)):
+            init_rfile=raw_input("\tReport file's directory is not valid, please enter the path again:")
+        else:
+           pass
+        
+        ############################################## checks if the report file is outside monitored directory?
+        
+        while not(fileout_mondir(init_rfile,mon_dir)):
+            init_rfile=raw_input("\tPlease enter report file outside monitored directory:")
+        else:
+          print "\tReport file is outside monitored directory ..."
+          sleep(1)
+        
+        ############################ checks if the verification file exists or not?
+        
+        if(file_exists(init_vfile)):
+          answer=raw_input("\tVerification file exists already, do you want to overwrite it? y/n ")
+          answer=answer.lower()
+          while not(answer=='y' or answer=='n'):
+             answer=raw_input("\tVerification file exists already, do you want to overwrite it? y/n ")
+             answer=answer.lower()
+          else:
+            if(answer=='y'):
+              i=open(init_vfile,"w")
+              i.close()
+            else:
+              sleep(1)
+              print"\tProgram is terminated ..."
+              sys.exit()
+        
+        ############################ checks if the report file exists or not?
+        
+        if(file_exists(init_rfile)):
+          answer=raw_input("\tReport file exists already, do you want to overwrite it? y/n ")
+          answer=answer.lower()
+          while not(answer=='y' or answer=='n'):
+             answer=raw_input("Report file exists already, do you want to overwrite it? y/n ")
+             answer=answer.lower()
+          else:
+            if(answer=='y'):
+              r=open(init_rfile,"w")
+              r.close()
+            else:
+              sleep(1)
+              print"\tProgram is terminated ..."
+              sys.exit()
+        
+        #################################################### code for the values of the files/directories
+        
+        for dirname, dirnames, filenames in os.walk(mon_dir):
+           for subdirname in dirnames:
+              dir_count=dir_count+1
+              directory_name=(os.path.join(dirname, subdirname))
+              with open(init_vfile, "a") as myfile:
+                   myfile.write('%s,%s,%s,%s,%s,%s'%(directory_name,getFolderSize(directory_name),userowner(directory_name),groupowner(directory_name),permissions(directory_name),modifiedtime(directory_name))+"\n")
+           for filename in filenames:
+              file_count=file_count+1
+              file_name=(os.path.join(dirname, filename))
+              with open(init_vfile, "a") as myfile:
+                   myfile.write('%s,%s,%s,%s,%s,%s,%s'%(file_name,getFileSize(file_name),userowner(file_name),groupowner(file_name),permissions(file_name),modifiedtime(file_name),hashoutput(file_name,hash_value))+"\n")
