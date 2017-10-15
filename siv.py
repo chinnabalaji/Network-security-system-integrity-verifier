@@ -252,3 +252,136 @@ elif(sys.argv[1]=='-i'):
               file_name=(os.path.join(dirname, filename))
               with open(init_vfile, "a") as myfile:
                    myfile.write('%s,%s,%s,%s,%s,%s,%s'%(file_name,getFileSize(file_name),userowner(file_name),groupowner(file_name),permissions(file_name),modifiedtime(file_name),hashoutput(file_name,hash_value))+"\n")
+
+                  
+                  ################################################## writing to report file initialization mode
+        
+        r=open(init_rfile,"a")
+        r.write('Full pathname to monitored directory:%s'%(mon_dir)+"\n")
+        r.write('Full pathname to verification file:%s'%(init_vfile)+"\n")
+        r.write('Number of directories parsed:%s'%(dir_count)+"\n")
+        r.write('Number of files parsed:%s'%(file_count)+"\n")
+        print "\tInitialization mode completed successfully!"
+        sleep(1)
+        r.write('Time to complete initialization mode:%s'%(time.time()-start_time)+"\n")
+        r.close()
+         
+      else: #this else is to check if elements -i -D -V -H are correct or not
+        print "Enter \'python siv.py -h\' for help ... "
+    else: #this else is to check if length_arguments!=10
+      print "Enter \'python siv.py -h\' for help ... "
+      sleep(1)
+      
+###############################################################################################################################################
+
+elif(sys.argv[1]=='-v'):
+    if(length_arguments==8): ######## no need of hash function
+      if(sys.argv[1]=='-v' and sys.argv[2]=='-D' and sys.argv[4]=='-V' and sys.argv[6]=='-R'):
+         print "\tVerification mode running ..." #verfication mode
+         sleep(1)
+         
+         mon_dir=sys.argv[3]
+
+         while not (history_mon_dir(mon_dir)):  #checks history.txt file to see if mon_dir exists or not
+            mon_dir=raw_input("\tPlease enter the directory in which initialization mode is completed:")
+         else:
+           while not(directory_exists(mon_dir)):    ########### bug, in the history file original directory will be as it is, but after that if user deletes that directory it asks for another valid directory, it won't check if it exists in the history or not
+              mon_dir=raw_input("\tPlease enter a valid directory:")
+           else:
+             print "\tMonitored directory exists!"
+             sleep(1)
+
+         verify_vfile=sys.argv[5]
+         verify_rfile=sys.argv[7] 
+         verify_rfile=verify_rfile+".txt"
+
+         num=int(max_mon_dir(mon_dir))-1
+         h=open("history.txt")
+         updated_dir=h.readlines()[num]
+         updated_dir_split=updated_dir.split(':')
+         all_init_values_split=updated_dir_split[1].split('\n')
+         all_init_values=all_init_values_split[0]
+         all_init_values_final_split=all_init_values.split(',')
+         hash_value=all_init_values_final_split[0]
+         init_vfile=all_init_values_final_split[2]
+         init_rfile=all_init_values_final_split[1] 
+         h.close()         
+         
+         ################################################# checks history and tells if you entered correct verification file or not 
+         
+         while not (check_vfiles(verify_vfile,init_vfile)):
+            verify_vfile=raw_input("\tEnter correct verification file for the corresponding monitored directory:")
+         else:
+           pass
+         
+         ############################## checking if the verification file exists or not
+
+         if(file_exists(verify_vfile)):
+           print "\tVerification file exists, parsing the file ..."
+           sleep(1)
+         else:
+           print "\tVerification file does not exist, please run the initialization mode again!"
+           sleep(1)
+           print "\tVerification mode is terminating ..."
+           sleep(1)
+           sys.exit()
+           
+         ############################################## checks if the verification file is outside monitored directory?
+         
+         while not(fileout_mondir(verify_vfile,mon_dir)):
+             verify_vfile=raw_input("\tPlease enter verification file outside monitored directory:")
+         else:
+           print "\tVerification file is outside monitored directory ..."
+           sleep(1)
+
+         ############################################# checks the directory of report file?
+         
+         while not(inputfile_directory(verify_rfile)):
+            verify_rfile=raw_input("\tReport file's directory is not valid, please enter the path again:")
+         else:
+           pass
+
+         ################################################ checks if the report file is outside monitored directory?
+         
+         while not(fileout_mondir(verify_rfile,mon_dir)):
+            verify_rfile=raw_input("\tPlease enter report file outside monitored directory:")
+         else:
+           print "\tReport file is outside monitored directory ..."
+           sleep(1)
+         
+         ################################## checks if the report file exists or not
+         if(file_exists(verify_rfile)):
+           answer=raw_input("\tReport file exists already, do you want to overwrite it? y/n ")
+           answer=answer.lower()
+           while not(answer=='y' or answer=='n'):
+             answer=raw_input("\tReport file exists already, do you want to overwrite it? y/n ")
+             answer=answer.lower()
+           else:
+             if(answer=='y'):
+               r=open(verify_rfile,"w")
+               r.close()
+             else:
+               sleep(1)
+               print"\tProgram is terminated ..."
+               sys.exit()
+         
+         #################################################### code for the values of the files/directories
+         
+         v=open("secret.txt","w")
+         v.close()
+         
+         dir_count_v=0
+         file_count_v=0
+
+         for dirname, dirnames, filenames in os.walk(mon_dir):
+            for subdirname in dirnames:
+               dir_count_v=dir_count_v+1
+               directory_name=(os.path.join(dirname, subdirname))
+               with open("secret.txt", "a") as myfile:
+                    myfile.write('%s,%s,%s,%s,%s,%s'%(directory_name,getFolderSize(directory_name),userowner(directory_name),groupowner(directory_name),permissions(directory_name),modifiedtime(directory_name))+"\n")
+            for filename in filenames:
+               file_count_v=file_count_v+1
+               file_name=(os.path.join(dirname, filename))
+               with open("secret.txt", "a") as myfile:
+                    myfile.write('%s,%s,%s,%s,%s,%s,%s'%(file_name,getFileSize(file_name),userowner(file_name),groupowner(file_name),permissions(file_name),modifiedtime(file_name),hashoutput(file_name,hash_value))+"\n")  
+         
