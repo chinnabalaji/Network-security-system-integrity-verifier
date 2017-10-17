@@ -385,3 +385,253 @@ elif(sys.argv[1]=='-v'):
                with open("secret.txt", "a") as myfile:
                     myfile.write('%s,%s,%s,%s,%s,%s,%s'%(file_name,getFileSize(file_name),userowner(file_name),groupowner(file_name),permissions(file_name),modifiedtime(file_name),hashoutput(file_name,hash_value))+"\n")  
          
+ #################### 1(a) Newfiles ####################
+         new_count_dir=0
+         new_count_file=0
+         v=open("secret.txt","r")
+         newdir=[]
+         newfiles=[]
+         intialization_data=[]
+         i=open(verify_vfile,"r")
+         for line in i:
+            line_split_i=line.split(',')
+            pathname_i=line_split_i[0]
+            intialization_data.append(pathname_i)
+         i.close()
+         for line in v:
+            line_split_v=line.split(',')
+            pathname_v=line_split_v[0]
+            if pathname_v not in intialization_data:
+               if(directory_exists(pathname_v)):
+                 new_count_dir=new_count_dir+1
+                 newdir.append(pathname_v)
+               elif(file_exists(pathname_v)):
+                   new_count_file=new_count_file+1
+                   newfiles.append(pathname_v)
+               else:
+                  pass
+         v.close() 
+         
+         #################### 1(a) Newfiles ####################
+            
+         #################### 1(b) Oldfiles ####################
+         old_count=0
+         i=open(verify_vfile,"r")
+         verification_data=[]
+         oldfiles=[]
+         v=open("secret.txt","r")
+         for line in v:
+            line_split_v=line.split(',')
+            pathname_v=line_split_v[0]
+            verification_data.append(pathname_v)
+         v.close()
+         for line in i:
+            line_split_i=line.split(',')
+            pathname_i=line_split_i[0]
+            if pathname_i not in verification_data:
+               oldfiles.append(pathname_i)
+               old_count=old_count+1
+         i.close()
+         
+         #################### 1(b) Oldfiles ####################
+         
+         #################### 2) Sizefiles ####################
+         v=open("secret.txt","r")
+         size_count_dir=0
+         size_count_file=0
+         Sizechangesdir=[]
+         Sizechangesfiles=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           size_v=line_split_v[1] 
+           i=open(verify_vfile,"r")
+           for line in i:
+              line_split_i=line.split(',')
+              pathname_i=line_split_i[0]
+              size_i=line_split_i[1]
+              if(pathname_v==pathname_i):
+                if(size_v!=size_i):  
+                  if(directory_exists(pathname_v)):
+                    size_count_dir=size_count_dir+1
+                    Sizechangesdir.append(pathname_v)
+                  elif(file_exists(pathname_v)):
+                      size_count_file=size_count_file+1
+                      Sizechangesfiles.append(pathname_v)
+                  else:
+                    pass
+           i.close()
+         v.close()
+              
+         #################### 2) Sizefiles ####################
+
+         ##################### 3) Hashval #####################
+         v=open("secret.txt","r")
+         hash_changes=0
+         Hashchanges=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           if(file_exists(pathname_v)):
+             hash_v=line_split_v[6] 
+             i=open(verify_vfile,"r")
+             for line in i:
+              line_split_i=line.split(',')
+              pathname_i=line_split_i[0]
+              if(file_exists(pathname_i)):
+                hash_i=line_split_i[6]
+                if(pathname_v==pathname_i):
+                  if(hash_v!=hash_i):
+                    Hashchanges.append(pathname_v)
+                    hash_changes=hash_changes+1
+           i.close()
+         v.close()
+
+         ##################### 3) Hashval #####################
+
+         ###################### 4(a) User #######################
+         v=open("secret.txt","r")
+         user_changes=0
+         Userchanges=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           user_v=line_split_v[2] 
+           i=open(verify_vfile,"r")
+           for line in i:
+             line_split_i=line.split(',')
+             pathname_i=line_split_i[0]
+             user_i=line_split_i[2]
+             if(pathname_v==pathname_i):
+               if(user_v!=user_i):
+                 Userchanges.append(pathname_v)
+                 user_changes=user_changes+1
+           i.close()
+         v.close()
+
+         ###################### 4(a) User #######################
+
+         ###################### 4(b) Group ######################
+         v=open("secret.txt","r")
+         group_changes=0
+         Groupchanges=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           group_v=line_split_v[3]
+           i=open(verify_vfile,"r") 
+           for line in i:
+             line_split_i=line.split(',')
+             pathname_i=line_split_i[0]
+             group_i=line_split_i[3]
+             if(pathname_v==pathname_i):
+               if(group_v!=group_i):
+                 Groupchanges.append(pathname_v)
+                 group_changes=group_changes+1
+           i.close()
+         v.close()
+
+         ##################### 4(b) Group #######################
+         
+         ##################### 5) A rights #####################
+         v=open("secret.txt","r")
+         access_rights_dir=0
+         access_rights_file=0
+         Accessrightsdir=[]
+         Accessrightsfiles=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           arights_v=line_split_v[4] 
+           i=open(verify_vfile,"r")
+           for line in i:
+             line_split_i=line.split(',')
+             pathname_i=line_split_i[0]
+             arights_i=line_split_i[4]
+             if(pathname_v==pathname_i):
+               if(arights_v!=arights_i):
+                 if(directory_exists(pathname_v)):
+                   access_rights_dir=access_rights_dir+1
+                   Accessrightsdir.append(pathname_v)
+                 elif(file_exists(pathname_v)):
+                     access_rights_file=access_rights_file+1
+                     Accessrightsfiles.append(pathname_v)
+                 else:
+                    pass
+           i.close()
+         v.close()
+
+         ##################### 5) A rights #####################
+         
+         ##################### 6) Modtime #####################
+         v=open("secret.txt","r")
+         mod_time_dir=0
+         mod_time_file=0
+         Modtimedir=[]
+         Modtimefiles=[]
+         for line in v:
+           line_split_v=line.split(',')
+           pathname_v=line_split_v[0]
+           modtime_v=line_split_v[5] 
+           i=open(verify_vfile,"r")
+           for line in i:
+             line_split_i=line.split(',')
+             pathname_i=line_split_i[0]
+             modtime_i=line_split_i[5]
+             if(pathname_v==pathname_i):
+               if(modtime_v!=modtime_i):
+                 if(directory_exists(pathname_v)):
+                   mod_time_dir=mod_time_dir+1
+                   Modtimedir.append(pathname_v)
+                 elif(file_exists(pathname_v)):
+                     mod_time_file=mod_time_file+1
+                     Modtimefiles.append(pathname_v)
+                 else:
+                    pass
+           i.close()
+         v.close()
+
+         ##################### 6) Modtime #####################
+
+         total_warnings = new_count_dir+new_count_file+old_count+size_count_dir+size_count_file+hash_changes+user_changes+group_changes+access_rights_dir+access_rights_file+mod_time_dir+mod_time_file
+
+
+         r=open(verify_rfile,"a")
+         r.write('1(a) New directories:'+' ,'.join(newdir)+"\n")
+         r.write('1(a) New files:'+' ,'.join(newfiles)+"\n")
+         r.write('1(b) Removed files/directories:'+' ,'.join(oldfiles)+"\n")
+         r.write('2(a) Directories with a different size than recorded:'+' ,'.join(Sizechangesdir)+"\n")
+         r.write('2(b) Files with a different size than recorded:'+' ,'.join(Sizechangesfiles)+"\n")
+         r.write('3) Files with a different message digest than computed before(contents changed):'+' ,'.join(Hashchanges)+"\n")
+         r.write('4(a) Files/directories with a different user:'+' ,'.join(Userchanges)+"\n")
+         r.write('4(b) Files/directories with a different group:'+' ,'.join(Groupchanges)+"\n")
+         r.write('5(a) Directories with modified access right:'+' ,'.join(Accessrightsdir)+"\n")
+         r.write('5(b) Files with modified access right:'+' ,'.join(Accessrightsfiles)+"\n")
+         r.write('6(a) Directories with a different modification date:'+' ,'.join(Modtimedir)+"\n")
+         r.write('6(b) Files with a different modification date:'+' ,'.join(Modtimefiles)+"\n")
+         r.close()
+
+         sleep(1)
+         print "\tVerification mode is completed!"
+         sleep(1)         
+
+         r=open(verify_rfile,"a")
+         r.write('\n')
+         r.write('\n')
+         r.write('1) Full pathname to monitored directory:%s'%(mon_dir)+"\n")
+         r.write('2) Full pathname to verification file:%s'%(verify_vfile)+"\n")
+         r.write('3) Full pathname to report file:%s'%(verify_rfile)+"\n")
+         r.write('4) Number of directories parsed:%s'%(dir_count_v)+"\n")
+         r.write('5) Number of files parsed:%s'%(file_count_v)+"\n")
+         r.write('6) Number of warning issued:%s'%(total_warnings)+"\n")
+         r.write('7) Time to complete the verification mode:%s'%(time.time()-start_time)+"\n")
+         r.close()
+
+      else: #this else is to check if elements -i -D -V -H are correct or not
+        print "Enter \'python siv.py -h\' for help ... "
+    else: #this else is to check if length_arguments!=10
+      print "Enter \'python siv.py -h\' for help ... "
+      sleep(1)
+    
+else:
+  print "Enter \'python siv.py -h\' for help ... "
